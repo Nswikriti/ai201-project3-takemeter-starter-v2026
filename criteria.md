@@ -51,65 +51,92 @@ whether you hit them:
 
 ---
 
-## 1.
+# Acceptance Criteria — TakeMeter
 
-<!-- Your criterion. It must name a number. -->
+Written before training or viewing results.
 
+Labels: seeking_support, venting, sharing_progress,
+general_discussion.
 
+Planned dataset: at least 200 real public posts from r/mentalhealth.
+Actual label counts will be recorded after collection.
 
-**Why this target:**
+## 1. Overall accuracy
 
-
-
----
-
-## 2.
-
-<!-- Your criterion. -->
-
-
+The classifier will achieve accuracy of at least 0.65 on the
+held-out test set. All test posts count, including predictions
+marked as needing review.
 
 **Why this target:**
+Uniform random guessing across four labels has an expected accuracy
+of 25%. A target of 65% requires substantially better performance,
+while allowing mistakes on posts that mix personal experiences,
+requests for support, and expressions of distress. I will also
+report the actual majority-label baseline for comparison.
 
+## 2. Per-label performance
 
-
----
-
-## 3.
-
-<!-- Your criterion. -->
-
-
-
-**Why this target:**
-
-
-
----
-
-## 4.
-
-<!-- Your criterion. -->
-
-
+Every label will achieve an F1 score of at least 0.55 on the
+held-out test set, and seeking_support will achieve at least 0.60.
 
 **Why this target:**
+Overall accuracy could hide poor performance on one category.
+The minimum for every label requires the classifier to recognize
+all four purposes. The higher target for seeking_support reflects
+the importance of distinguishing explicit requests for help from
+posts that mainly express feelings. This measures communication
+purpose, not clinical urgency.
 
+## 3. Label balance
 
-
----
-
-## 5.
-
-<!-- Your criterion. -->
-
-
+In the complete labeled dataset, no label will account for more
+than 50% of posts, and no label will account for less than 15%.
 
 **Why this target:**
+These limits are stricter than the assignment's 70% maximum.
+They reduce the chance that one category dominates training.
+With exactly 200 posts, each label would have at least 30 examples.
+This provides representation, although small test-set counts may
+still make per-label results unstable.
 
+## 4. Labeling consistency
 
+A second labeler will agree with my labels on at least 15 of the
+20 independently labeled cold examples, giving agreement of
+at least 75%.
 
----
+The second labeler will receive the same definitions and decision
+rule but will not see my labels before assigning their own.
+
+**Why this target:**
+Seeking support and venting can overlap, so some disagreement is
+expected. Agreement below 75% would prompt a review of ambiguous
+definitions and boundary cases. Disagreements will be recorded
+rather than hidden by changing the original cold labels.
+
+## 5. Confidence and correctness
+
+Among held-out test predictions with model confidence of at least
+0.70, at least 80% will be correct.
+
+Predictions below 0.70 will be marked "needs review" in the
+evaluation report while retaining their predicted labels.
+They will remain included in overall accuracy and per-label F1.
+
+At least 10 held-out test predictions must have confidence of
+0.70 or higher. If fewer than 10 qualify, this criterion will
+be marked as insufficient evidence rather than passed.
+The number of qualifying predictions will always be reported.
+
+**Why this target:**
+The high-confidence group should be more accurate than the 65%
+overall target. This checks whether the chosen confidence threshold
+identifies a more reliable subset. Reporting the group size prevents
+a high percentage based on very few predictions from being
+presented without context.I chose a minimum of 10 because the expected test set contains
+about 30 posts. This requires roughly one-third to qualify and
+avoids judging the 80% target from only one or two predictions.
+The result will still be sensitive to individual mistakes.
 
 <!-- ─────────────────────────────────────────────────────────────────────────
      UNIT 6 — read this before you change anything above.
